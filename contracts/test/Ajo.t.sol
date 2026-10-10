@@ -106,6 +106,22 @@ contract AjoTest is Test {
         try ajo.settleVoucher(id) {} catch {}
     }
 
+    // ─── identity ────────────────────────────────────────────────────────────
+
+    function test_SetName() public {
+        uint256 id = _circle(0, 0);
+        vm.prank(bola);
+        ajo.setName("Bola");
+        assertEq(ajo.nameOf(bola), "Bola");
+        assertEq(ajo.getMembers(id)[1].name, "Bola");
+        vm.prank(bola);
+        vm.expectRevert(Ajo.InvalidName.selector);
+        ajo.setName("");
+        vm.prank(bola);
+        vm.expectRevert(Ajo.InvalidName.selector);
+        ajo.setName("a name that is far too long for a circle");
+    }
+
     // ─── setup rules ─────────────────────────────────────────────────────────
 
     function test_CreateAndJoin() public {

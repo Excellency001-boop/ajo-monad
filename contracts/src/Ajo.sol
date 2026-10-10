@@ -106,6 +106,7 @@ contract Ajo is ReentrancyGuard {
     /// @notice Read model for frontends: one call returns everything about a member.
     struct MemberView {
         address account;
+        string name;
         Member data;
         bool paidThisRound;
         uint256 releasable;
@@ -127,6 +128,7 @@ contract Ajo is ReentrancyGuard {
     mapping(uint256 => mapping(address => bool)) internal _listed;
 
     mapping(address => Reputation) public reputation;
+    mapping(address => string) public nameOf; // optional display name, set by the account itself
     mapping(address => uint256) public claimable; // fallback when a push transfer fails
 
     // ─── Events ──────────────────────────────────────────────────────────────
@@ -170,6 +172,7 @@ contract Ajo is ReentrancyGuard {
     event MemberSettled(uint256 indexed circleId, address indexed member, uint256 amount);
     event VoucherSettled(uint256 indexed circleId, address indexed voucher, uint256 amount);
     event TransferDeferred(address indexed to, uint256 amount);
+    event NameSet(address indexed account, string name);
 
     // ─── Errors ──────────────────────────────────────────────────────────────
 
@@ -188,9 +191,20 @@ contract Ajo is ReentrancyGuard {
     error AlreadyPaid();
     error RoundNotClosable();
     error NothingToClaim();
+    error InvalidName();
 
     constructor(IERC20 token_) {
         token = token_;
+    }
+
+    // ─── Identity ────────────────────────────────────────────────────────────
+
+    /// @notice Set the name your circle-mates see ("Amaka", "Mama Tunde"). 1–32 bytes.
+    function setName(string calldata name) external {
+        uint256 len = bytes(name).length;
+        if (len == 0 || len > 32) revert InvalidName();
+        nameOf[msg.sender] = name;
+        emit NameSet(msg.sender, name);
     }
 
     // ─── Setup ───────────────────────────────────────────────────────────────
@@ -441,6 +455,7 @@ contract Ajo is ReentrancyGuard {
             Member storage m = _members[circleId][a];
             out[i] = MemberView({
                 account: a,
+                name: nameOf[a],
                 data: m,
                 paidThisRound: paid[circleId][c.currentRound][a],
                 releasable: c.status == Status.Active ? _releasable(circleId, c, a, m) : 0

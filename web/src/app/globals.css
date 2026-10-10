@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/*
+  Ajo visual language — rooted in adire, Yoruba indigo-dyed cloth.
+  Deep indigo, clay red and ochre gold on warm undyed cotton.
+  Fraunces (warm old-style serif) for voice, Inter for numbers and data.
+*/
+:root {
+  --indigo-900: #171a34;
+  --indigo-800: #20264d;
+  --indigo-600: #34407e;
+  --indigo-400: #5666a8;
+  --clay: #c05a35;
+  --clay-dark: #a2472a;
+  --ochre: #d9a441;
+  --ochre-soft: #e7c37e;
+  --cream: #f4ecdb;
+  --paper: #fbf6ea;
+  --paper-2: #f7efdd;
+  --ink: #241d16;
+  --ink-soft: #5c5040;
+  --line: #e3d7bd;
+  --good: #3f7d54;
+  --warn: #c9852a;
+  --bad: #b23b2a;
+}
+
+@theme inline {
+  --color-indigo-900: var(--indigo-900);
+  --color-indigo-800: var(--indigo-800);
+  --color-indigo-600: var(--indigo-600);
+  --color-indigo-400: var(--indigo-400);
+  --color-clay: var(--clay);
+  --color-clay-dark: var(--clay-dark);
+  --color-ochre: var(--ochre);
+  --color-ochre-soft: var(--ochre-soft);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --shadow-card: 0 1px 2px rgba(36, 29, 22, 0.06), 0 14px 34px -18px rgba(36, 29, 22, 0.32);
+  --shadow-lift: 0 2px 6px rgba(36, 29, 22, 0.08), 0 30px 60px -28px rgba(23, 26, 52, 0.45);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  color: var(--ink);
+  background-color: var(--cream);
+  /* Adire-inspired tessellation, faint enough to read as cloth texture. */
+  background-image:
+    radial-gradient(circle at 25px 25px, rgba(52, 64, 126, 0.05) 2px, transparent 3px),
+    radial-gradient(circle at 75px 75px, rgba(192, 90, 53, 0.05) 2px, transparent 3px),
+    linear-gradient(rgba(52, 64, 126, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 64, 126, 0.035) 1px, transparent 1px);
+  background-size:
+    100px 100px,
+    100px 100px,
+    50px 50px,
+    50px 50px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Shared building blocks (Tailwind v4 utilities so they can build on each other) */
+@utility card {
+  @apply rounded-[18px] border border-line bg-paper shadow-[var(--shadow-card)];
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-[18px] py-[11px] text-[14.5px] font-semibold transition active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-clay text-[#fff5ec] shadow-[0_10px_20px_-12px_rgba(160,71,42,0.9)] hover:bg-clay-dark;
+}
+@utility btn-indigo {
+  @apply btn bg-indigo-800 text-[#eef0fb] hover:bg-indigo-900;
+}
+@utility btn-ghost {
+  @apply btn border border-line bg-transparent text-indigo-800 hover:bg-paper-2;
+}
+@utility btn-sm {
+  @apply rounded-[10px] px-[13px] py-2 text-[13px];
+}
+@utility field {
+  @apply w-full rounded-xl border border-line bg-white/70 px-4 py-3 text-[16px] text-ink outline-none transition placeholder:text-ink-soft/50 focus:border-indigo-400 focus:bg-white;
+}
+@utility label {
+  @apply mb-1.5 block text-[13px] font-medium text-ink-soft;
+}
+@utility eyebrow {
+  @apply text-[12px] font-semibold uppercase tracking-[0.14em] text-clay-dark;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation: pop 0.45s ease-out both;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
