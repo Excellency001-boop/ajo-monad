@@ -217,6 +217,15 @@ contract AjoTest is Test {
         ajo.vouch(id, eze, 10e6);
     }
 
+    function test_RevertWhen_DustVouch() public {
+        uint256 id = _circle(0, 0);
+        vm.prank(eze);
+        vm.expectRevert(Ajo.InvalidAmount.selector);
+        ajo.vouch(id, bola, 1); // can't fill voucher slots with dust
+        vm.prank(eze);
+        ajo.vouch(id, bola, C / 10); // a tenth of a contribution is the floor
+    }
+
     function test_Cancel_RefundsStakesAndVouches() public {
         uint256 id = _circle(50e6, 50e6);
         vm.prank(eze);
@@ -548,7 +557,7 @@ contract AjoTest is Test {
         }
         for (uint256 i; i < 4; ++i) {
             uint128 v = uint128(bound(uint256(keccak256(abi.encode(vouchSeed, i))), 0, 400e6));
-            if (v > 0) {
+            if (v >= C / 10) {
                 vm.prank(eze);
                 ajo.vouch(id, ms[i], v);
             }

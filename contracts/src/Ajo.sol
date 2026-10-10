@@ -265,7 +265,9 @@ contract Ajo is ReentrancyGuard {
         Member storage m = _members[circleId][member];
         if (!m.joined) revert NotMember();
         if (member == msg.sender) revert CannotVouchForSelf();
-        if (amount == 0) revert InvalidAmount();
+        // A floor stops anyone filling the MAX_VOUCHERS slots with dust to lock out real vouchers:
+        // occupying every slot now costs a full contribution, which only helps the member.
+        if (amount == 0 || amount < c.contribution / MAX_VOUCHERS) revert InvalidAmount();
 
         Vouch[] storage list = _vouches[circleId][member];
         uint256 i;

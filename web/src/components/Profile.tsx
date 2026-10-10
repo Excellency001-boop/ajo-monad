@@ -55,8 +55,8 @@ export function Profile() {
       </section>
 
       <p className="text-center text-xs leading-relaxed text-ink-soft">
-        Every number here comes straight from the Ajo contract on Monad and is weighted by real money, so it can&apos;t be
-        bought or faked. It belongs to this address, not to any one circle.
+        Every number here comes straight from the Ajo contract on Monad. The score weighs reliability by the money actually
+        saved, so a good record takes real savings over real time. It belongs to this address, not to any one circle.
       </p>
     </div>
   );

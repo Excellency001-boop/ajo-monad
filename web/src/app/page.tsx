@@ -86,9 +86,9 @@ function Landing() {
           <p className="eyebrow mb-2">Your record travels with you</p>
           <h2 className="font-serif text-2xl font-semibold">A trust score banks can&apos;t ignore</h2>
           <p className="mt-2 max-w-[60ch] text-sm leading-relaxed text-ink-soft">
-            Every payment on time, every circle finished and every vouch honoured is recorded publicly and weighted by real money —
-            so it can&apos;t be faked with two phones. Millions of people save in ajo every month with no credit history to show for
-            it. Now it counts.
+            Every payment on time, every circle finished and every vouch honoured is recorded publicly and weighted by the money
+            actually saved — so building a good record takes real savings over real time, not a trick. Millions of people save in
+            ajo every month with no credit history to show for it. Now it counts.
           </p>
         </div>
         <div className="text-center">

@@ -541,6 +541,7 @@ function VouchSheet({ id, circle, member, onClose }: { id: bigint; circle: Circl
   const gap = dues > member.data.stake + member.data.vouched ? dues - member.data.stake - member.data.vouched : 0n;
   const [input, setInput] = useState(nairaInput(gap));
   const amount = nairaToUnits(input);
+  const minVouch = circle.contribution / 10n;
   const self = address?.toLowerCase() === member.account.toLowerCase();
 
   return (
@@ -585,7 +586,8 @@ function VouchSheet({ id, circle, member, onClose }: { id: bigint; circle: Circl
             <input id="vouch" className="field tabular-nums" inputMode="numeric" value={input} onChange={(e) => setInput(e.target.value)} autoFocus />
           </div>
           {amount > balance && <p className="text-sm text-bad">Not enough in your wallet.</p>}
-          <button className="btn-primary w-full" disabled={!onMonad || amount === 0n || amount > balance || state.status === "pending"}>
+          {amount > 0n && amount < minVouch && <p className="text-sm text-bad">The smallest vouch is {naira(minVouch)}.</p>}
+          <button className="btn-primary w-full" disabled={!onMonad || amount < minVouch || amount === 0n || amount > balance || state.status === "pending"}>
             Vouch {amount > 0n ? naira(amount) : ""}
           </button>
         </form>

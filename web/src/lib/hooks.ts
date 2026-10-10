@@ -120,14 +120,17 @@ export function useReputation(address: Address | undefined) {
 
 /**
  * Trust score 0–100 shown on profiles. Transparent on purpose: every input is on-chain.
- * Payment reliability is the core; completed circles and honoured vouches add weight;
- * newcomers start at 0 ("new"), not at a free 50.
+ * - Reliability (on time vs late vs missed) is the core.
+ * - Experience is weighted by VALUE saved on time and circles finished clean, not by payment count,
+ *   so inflating a score means locking real money for real time, not spamming tiny circles.
+ * - Newcomers show "New", not a free 50.
  */
 export function trustScore(r: ReturnType<typeof useReputation>["rep"]): number | null {
   const paidTotal = r.onTime + r.late + r.missed;
   if (paidTotal === 0) return null;
   const reliability = (r.onTime + 0.5 * r.late) / paidTotal; // 0..1
-  const experience = Math.min(1, (r.circlesCompleted * 2 + paidTotal / 4) / 10); // grows with history
+  const savedUsd = Number(r.savedValue) / 1e6;
+  const experience = Math.min(1, savedUsd / 2_000 + r.circlesCompleted * 0.15); // ~$2k saved or ~7 clean circles = full
   const backingOthers = Number(r.vouchHonoured) > 0 && Number(r.vouchLost) === 0 ? 0.05 : 0;
   return Math.round(Math.min(1, reliability * (0.6 + 0.35 * experience) + backingOthers) * 100);
 }
