@@ -8,7 +8,7 @@ Built on **Monad** for the Metropolis hackathon · Track: **Social, Attention & 
 
 | | |
 |---|---|
-| Live app | `<Vercel URL>` |
+| Live app | **https://ajo-monad.vercel.app** |
 | Demo video | `<YouTube/Loom URL>` |
 | Ajo contract (verified) | [`0xE68c055aEECA6567DE6C01Dd90dC21381E9C4Bd8`](https://testnet.monadvision.com/address/0xE68c055aEECA6567DE6C01Dd90dC21381E9C4Bd8) |
 | Test dollar (verified) | [`0x26cEF3636D74c34ffC1F17Ba8E6C3B4a57c70F7a`](https://testnet.monadvision.com/address/0x26cEF3636D74c34ffC1F17Ba8E6C3B4a57c70F7a) |

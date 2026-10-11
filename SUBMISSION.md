@@ -39,7 +39,7 @@ coverage, value-weighted reputation, the contract, 26 tests plus a 10,000-run mo
 mobile-first app. The README has a v1 vs v2 table.
 
 ## Links
-- Live app: `<Vercel URL>`
+- Live app: https://ajo-monad.vercel.app
 - Code: https://github.com/Excellency001-boop/ajo-monad
 - Demo video: `<URL>`
 - Contract (verified): https://testnet.monadvision.com/address/0xE68c055aEECA6567DE6C01Dd90dC21381E9C4Bd8
