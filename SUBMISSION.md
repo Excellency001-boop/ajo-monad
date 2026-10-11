@@ -40,7 +40,7 @@ mobile-first app. The README has a v1 vs v2 table.
 
 ## Links
 - Live app: `<Vercel URL>`
-- Code: `<GitHub URL>`
+- Code: https://github.com/Excellency001-boop/ajo-monad
 - Demo video: `<URL>`
 - Contract (verified): https://testnet.monadvision.com/address/0xE68c055aEECA6567DE6C01Dd90dC21381E9C4Bd8
 

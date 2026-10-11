@@ -119,7 +119,7 @@ web/ (Next.js 16, wagmi 3, viem, Tailwind 4)
 ## Run it
 
 ```bash
-git clone --recursive <this repo> && cd ajo
+git clone --recursive https://github.com/Excellency001-boop/ajo-monad && cd ajo-monad
 
 # contracts
 cd contracts && forge test            # 26 tests
