@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { usePublicClient } from "wagmi";
+import { useConnection, usePublicClient } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
 import { BaseError, ContractFunctionRevertedError, type Hash, type TransactionReceipt } from "viem";
 
@@ -46,6 +46,7 @@ function friendly(e: unknown): string {
 /** sign → wait for receipt → refresh all reads; measures confirmation time. */
 export function useTx() {
   const client = usePublicClient();
+  const { address } = useConnection();
   const queryClient = useQueryClient();
   const [state, setState] = useState<TxState>({ status: "idle" });
 
@@ -55,6 +56,14 @@ export function useTx() {
       steps: { label: string; send: () => Promise<Hash> }[],
     ): Promise<TransactionReceipt | null> => {
       if (!client) throw new Error("No connection to Monad");
+      // A brand-new account has no MON for network fees until the free top-up lands.
+      if (address && (await client.getBalance({ address }).catch(() => 1n)) === 0n) {
+        setState({
+          status: "error",
+          message: "Your account doesn't have network fees yet. Free fees are added automatically — wait a few seconds and try again.",
+        });
+        return null;
+      }
       try {
         let last: { hash: Hash; ms: number; receipt: TransactionReceipt } | undefined;
         for (const [i, step] of steps.entries()) {
@@ -76,7 +85,7 @@ export function useTx() {
         return null;
       }
     },
-    [client, queryClient],
+    [client, address, queryClient],
   );
 
   return { state, run, reset: () => setState({ status: "idle" }) };
