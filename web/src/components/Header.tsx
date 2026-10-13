@@ -59,7 +59,7 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
               >
                 <span className="flex items-center gap-3">
                   {c.icon ? <img src={c.icon} alt="" className="h-6 w-6 rounded" /> : <span className="h-6 w-6 rounded bg-paper-2" />}
-                  {c.name === "Injected" ? "Browser wallet" : c.name}
+                  {c.name === "Injected" ? "Browser wallet" : c.id === "mock" ? "Demo wallet" : c.name}
                 </span>
                 <span aria-hidden>→</span>
               </button>

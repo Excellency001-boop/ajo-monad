@@ -38,6 +38,10 @@ trustless circle with a deposit. Everything in this repo is new: the vouching an
 coverage, value-weighted reputation, the contract, 26 tests plus a 10,000-run money-safety fuzz, and a new
 mobile-first app. The README has a v1 vs v2 table.
 
+**About the demo video:** to keep it short, the video runs the same app and contracts on a local
+Monad-compatible chain (a demo wallet, with the other members played by a script). The identical contracts are
+deployed and verified on Monad testnet, and the live app at the link below uses them.
+
 ## Links
 - Live app: https://ajo-monad.vercel.app
 - Code: https://github.com/Excellency001-boop/ajo-monad
