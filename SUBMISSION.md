@@ -45,7 +45,7 @@ deployed and verified on Monad testnet, and the live app at the link below uses 
 ## Links
 - Live app: https://ajo-monad.vercel.app
 - Code: https://github.com/Excellency001-boop/ajo-monad
-- Demo video: `<URL>`
+- Demo video: https://youtu.be/ASB7kh-7Csg
 - Contract (verified): https://testnet.monadvision.com/address/0xE68c055aEECA6567DE6C01Dd90dC21381E9C4Bd8
 
 ---
