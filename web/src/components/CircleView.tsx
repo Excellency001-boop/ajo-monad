@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useReadContract, useWatchContractEvent } from "wagmi";
 import { useQueryClient } from "@tanstack/react-query";
@@ -100,6 +100,13 @@ export function CircleView() {
 
 function CircleHeader({ id, circle, members, status, share }: { id: bigint; circle: CircleData; members: readonly MemberView[]; status: string; share: boolean }) {
   const [open, setOpen] = useState(share);
+  const router = useRouter();
+  const pathname = usePathname();
+  // Closing the post-create invite drops ?share=1 so a refresh doesn't pop it open again.
+  const close = () => {
+    setOpen(false);
+    if (share) router.replace(pathname, { scroll: false });
+  };
   const pot = circle.contribution * BigInt(circle.size);
   const organizer = members.find((m) => m.account === circle.organizer);
   const link = typeof window !== "undefined" ? `${window.location.origin}/c/${id}` : `/c/${id}`;
@@ -129,7 +136,7 @@ function CircleHeader({ id, circle, members, status, share }: { id: bigint; circ
           <span className="font-serif text-3xl font-semibold">{naira(pot)}</span>
         </div>
       </div>
-      <Sheet open={open} onClose={() => setOpen(false)} title="Invite your people">
+      <Sheet open={open} onClose={close} title="Invite your people">
         <p className="text-sm text-ink-soft">Anyone with this link can join until the circle is full — or vouch for a member.</p>
         <div className="mt-3 break-all rounded-xl bg-paper-2 p-3 font-mono text-xs">{link}</div>
         <div className="mt-4 grid gap-2">

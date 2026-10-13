@@ -6,7 +6,7 @@ import { useConnect, useConnectors, useDisconnect, useSwitchChain } from "wagmi"
 import { chain } from "@/lib/config";
 import { useMe, useReputation } from "@/lib/hooks";
 import { shortAddr } from "@/lib/money";
-import { Avatar, Sheet } from "./ui";
+import { Avatar, Sheet, useHydrated } from "./ui";
 
 export function Header() {
   return (
@@ -35,8 +35,9 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
   const disconnect = useDisconnect();
   const switchChain = useSwitchChain();
   const [open, setOpen] = useState(false);
+  const hydrated = useHydrated();
 
-  if (!isConnected) {
+  if (!hydrated || !isConnected) {
     // De-duplicate: wagmi lists both the generic "Injected" and EIP-6963 wallets (MetaMask, Rabby…).
     const named = connectors.filter((c) => c.id !== "injected");
     const options = named.length ? named : connectors;
