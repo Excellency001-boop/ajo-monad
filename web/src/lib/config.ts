@@ -1,4 +1,5 @@
 import { createConfig, fallback, http } from "wagmi";
+import { createConfig as privyCreateConfig } from "@privy-io/wagmi";
 import { injected, mock, walletConnect } from "wagmi/connectors";
 import { monadTestnet } from "viem/chains";
 import type { Address } from "viem";
@@ -29,27 +30,12 @@ const wcProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
 // Local QA only: drive the UI with an unlocked anvil account instead of a browser wallet.
 const devMockAccount = process.env.NEXT_PUBLIC_DEV_MOCK_ACCOUNT as Address | undefined;
 
-export const wagmiConfig = createConfig({
-  chains: [chain],
-  connectors: devMockAccount
-    ? [mock({ accounts: [devMockAccount], features: { reconnect: true, defaultConnected: true } })]
-    : [
-        injected(),
-        ...(wcProjectId
-          ? [
-              walletConnect({
-                projectId: wcProjectId,
-                showQrModal: true,
-                metadata: {
-                  name: "Ajo",
-                  description: "Savings circles where trust is money",
-                  url: "https://ajo.app",
-                  icons: [],
-                },
-              }),
-            ]
-          : []),
-      ],
+/** Email / Google sign-in with an automatic wallet (Privy). Off in local demo mode. */
+export const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+export const USE_PRIVY = Boolean(PRIVY_APP_ID) && !devMockAccount;
+
+const shared = {
+  chains: [chain] as const,
   transports: {
     [chain.id]: isLocal
       ? http(rpcUrl)
@@ -57,7 +43,33 @@ export const wagmiConfig = createConfig({
   },
   pollingInterval: 1_000,
   ssr: true,
-});
+};
+
+// With Privy, its wagmi bridge supplies the connectors (embedded wallet + MetaMask etc.).
+export const wagmiConfig = USE_PRIVY
+  ? privyCreateConfig(shared)
+  : createConfig({
+      ...shared,
+      connectors: devMockAccount
+        ? [mock({ accounts: [devMockAccount], features: { reconnect: true, defaultConnected: true } })]
+        : [
+            injected(),
+            ...(wcProjectId
+              ? [
+                  walletConnect({
+                    projectId: wcProjectId,
+                    showQrModal: true,
+                    metadata: {
+                      name: "Ajo",
+                      description: "Savings circles where trust is money",
+                      url: "https://ajo-monad.vercel.app",
+                      icons: [],
+                    },
+                  }),
+                ]
+              : []),
+          ],
+    });
 
 declare module "wagmi" {
   interface Register {

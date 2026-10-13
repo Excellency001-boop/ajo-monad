@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useConnect, useConnectors, useDisconnect, useSwitchChain } from "wagmi";
-import { chain } from "@/lib/config";
+import { usePrivy } from "@privy-io/react-auth";
+import { chain, USE_PRIVY } from "@/lib/config";
 import { useMe, useReputation } from "@/lib/hooks";
 import { shortAddr } from "@/lib/money";
 import { Avatar, Sheet, useHydrated } from "./ui";
@@ -27,9 +28,23 @@ export function Header() {
   );
 }
 
-export function ConnectButton({ compact = false }: { compact?: boolean }) {
-  const { address, isConnected, onMonad } = useMe();
-  const { name } = useReputation(address);
+/** Email/Google sign-in when Privy is configured; plain wallet connect otherwise (local demo). */
+export const ConnectButton = USE_PRIVY ? PrivyConnectButton : WalletConnectButton;
+
+function PrivyConnectButton({ compact = false }: { compact?: boolean }) {
+  const { ready, authenticated, login, logout } = usePrivy();
+  const { address, isConnected } = useMe();
+  const hydrated = useHydrated();
+  const cls = compact ? "btn-primary btn-sm" : "btn-primary px-6 py-3.5 text-base";
+
+  if (!hydrated || !ready) return <button className={cls} disabled>Sign in</button>;
+  if (!authenticated) return <button className={cls} onClick={() => login()}>Sign in</button>;
+  if (!isConnected || !address) return <button className={cls} disabled>Setting up…</button>;
+  return <AccountButton onSignOut={() => logout()} />;
+}
+
+function WalletConnectButton({ compact = false }: { compact?: boolean }) {
+  const { isConnected, onMonad } = useMe();
   const connectors = useConnectors();
   const connect = useConnect();
   const disconnect = useDisconnect();
@@ -85,6 +100,13 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
     );
   }
 
+  return <AccountButton onSignOut={() => disconnect.mutate()} />;
+}
+
+function AccountButton({ onSignOut }: { onSignOut: () => void }) {
+  const { address } = useMe();
+  const { name } = useReputation(address);
+  const [open, setOpen] = useState(false);
   return (
     <>
       <button className="flex items-center gap-2 rounded-full border border-line bg-paper-2 py-1 pl-1 pr-3 text-sm" onClick={() => setOpen(true)}>
@@ -109,7 +131,7 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
           <button
             className="btn-ghost text-bad"
             onClick={() => {
-              disconnect.mutate();
+              onSignOut();
               setOpen(false);
             }}
           >
